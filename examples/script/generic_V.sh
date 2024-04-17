@@ -24,9 +24,9 @@ min_fold_output=1.5
 bsize=2000
 scale=100
 
-plot_individual_factor=0
+plot_individual_factor=1
 
-plot_subbatch=8
+plot_subbatch=0
 
 for ARGUMENT in "$@"
 do
