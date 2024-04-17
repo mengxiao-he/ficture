@@ -26,7 +26,9 @@ do
    export "$KEY"="$VALUE"
 done
 
-source ${env}
+source /home/mengxiao.he/bin/miniconda3/etc/profile.d/conda.sh
+conda activate ficture
+
 set -xe
 set -o pipefail
 
