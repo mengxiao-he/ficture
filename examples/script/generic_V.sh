@@ -12,8 +12,8 @@
 key=Count
 mu_scale=1
 thread=1
-pixel_resolution=0.5    # um, for visualization
-analysis_resolution=0.1 # um
+pixel_resolution=2    # um, for visualization
+analysis_resolution=2 # um
 
 # For DE output
 min_ct_per_feature=50
