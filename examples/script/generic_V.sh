@@ -75,8 +75,8 @@ ficture slda_decode --input ${pixel} --output ${output} --model ${model} --ancho
 input=${output_path}/${prefix}.pixel.tsv.gz # j, X, Y, K1, ..., KJ, P1, ..., PJ, J=topk
 output=${output_path}/${prefix}.pixel.sorted.tsv.gz
 
-offsetx=${xmin}
-offsety=${ymin}
+offsetx=$(echo "scale=2; $xmin / $mu_scale" | bc)
+offsety=$(echo "scale=2; $ymin / $mu_scale" | bc)
 rangex=$( echo "(${xmax} - ${xmin} + 0.5)/1+1" | bc )
 rangey=$( echo "(${ymax} - ${ymin} + 0.5)/1+1" | bc )
 
