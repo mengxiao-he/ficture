@@ -75,8 +75,13 @@ ficture slda_decode --input ${pixel} --output ${output} --model ${model} --ancho
 input=${output_path}/${prefix}.pixel.tsv.gz # j, X, Y, K1, ..., KJ, P1, ..., PJ, J=topk
 output=${output_path}/${prefix}.pixel.sorted.tsv.gz
 
-offsetx=$(echo "scale=2; $xmin / $mu_scale" | bc)
-offsety=$(echo "scale=2; $ymin / $mu_scale" | bc)
+xmin=$(zcat ${input} | awk 'BEGIN {min = 1e9; max = -1e9} NR>1 {if ($2<min) min=$2; if ($2>max) max=$2;} END {print min}')
+xmax=$(zcat ${input} | awk 'BEGIN {min = 1e9; max = -1e9} NR>1 {if ($2<min) min=$2; if ($2>max) max=$2;} END {print max}')
+ymin=$(zcat ${input} | awk 'BEGIN {min = 1e9; max = -1e9} NR>1 {if ($3<min) min=$3; if ($3>max) max=$3;} END {print min}')
+ymax=$(zcat ${input} | awk 'BEGIN {min = 1e9; max = -1e9} NR>1 {if ($3<min) min=$3; if ($3>max) max=$3;} END {print max}')
+
+offsetx=${xmin}
+offsety=${ymin}
 rangex=$( echo "(${xmax} - ${xmin} + 0.5)/1+1" | bc )
 rangey=$( echo "(${ymax} - ${ymin} + 0.5)/1+1" | bc )
 
