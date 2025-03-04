@@ -2,7 +2,7 @@
 
 Locate the transcript file from your SMI output, most likely it is named `*_tx_file.csv.gz` with the following columns
 
-```
+```plaintext linenums="1"
 "fov","cell_ID","x_global_px","y_global_px","x_local_px","y_local_px","z","target","CellComp"
 1,0,298943.990047619,19493.2809095238,896.371,4433.7571,0,"Snap25","None"
 1,0,298685.619047619,19489.3238095238,638,4429.8,0,"Fth1","None"
@@ -24,27 +24,27 @@ The output is sorted first along the Y-axis, so later you would set `major_axis=
 
 The python script can be found in `ficture/misc`. use `python format_cosmx.py -h` to see the full options.
 
-```bash
+```bash linenums="1"
 input=/path/to/input/Tissue5_tx_file.csv.gz # Change it to your transcript file
 path=/path/to/output
 iden=brain # how you identify your files
-dummy=NegPrb # Name of the negative controls, could pass regex to match multiple prob names
+dummy="Negativ|System" # Name or regex that match the negative control probs
 px_to_um=0.168 # convert the pixel unit in the input to micrometer
 
 output=${path}/filtered.matrix.${iden}.tsv
 feature=${path}/feature.clean.${iden}.tsv.gz
 
-python mist/format_cosmx.py --input ${input} --output ${output} --feature ${feature} --dummy_genes ${dummy} --px_to_um ${px_to_um} --annotation cell_ID --precision 2
+python misc/format_cosmx.py --input ${input} --output ${output} --feature ${feature} --dummy_genes ${dummy} --px_to_um ${px_to_um} --annotation cell_ID --precision 2
 sort -k2,2g -k1,1g ${output} | gzip -c > ${output}.gz
 rm ${output}
 ```
 
 If we would like to merge pixels with (almost?) identical coordinates, replace the last two lines by
-```bash
+```bash linenums="1"
 sort -k2,2g -k1,1g ${output} |
 awk 'BEGIN { OFS="\t"; print "X", "Y", "gene", "cell_ID", "Count" }
      NR > 1 {
-       if ($1 == prevX && $2 == prevY) {
+       if ($1 == prevX && $2 == prevY && $3 == prevGene) {
          sumCount += $5;
        } else {
          if (NR > 2) {

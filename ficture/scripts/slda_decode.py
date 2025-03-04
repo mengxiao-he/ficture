@@ -22,7 +22,7 @@ def slda_decode(_args):
     parser.add_argument('--mu_scale', type=float, default=26.67, help='Coordinate to um translate')
     parser.add_argument('--key', type=str, default = 'gn', help='gt: genetotal, gn: gene, spl: velo-spliced, unspl: velo-unspliced')
     parser.add_argument('--batch_id', type=str, default = 'random_index', help='Input has to have a column with this name indicating the minibatch id')
-    parser.add_argument('--precision', type=float, default=.25, help='If positive, collapse pixels within X um.')
+    parser.add_argument('--precision', type=float, default=.1, help='If positive, collapse pixels within X um.')
 
     # Learning related parameters
     parser.add_argument('--thread', type=int, default=1, help='')
@@ -138,7 +138,7 @@ def slda_decode(_args):
         pcount, pixel, anchor  = pixel_obj.run_chunk(slda, init_bound)
         pixel.X = pixel.X.map('{:.2f}'.format)
         pixel.Y = pixel.Y.map('{:.2f}'.format)
-        if args.lite_topk_output_pixel > 0 and args.lite_topk_output_pixel < K:
+        if args.lite_topk_output_pixel > 0 and args.lite_topk_output_pixel <= K:
             X = pixel[factor_header].values
             partial_indices = np.argpartition(X, -args.lite_topk_output_pixel, axis=1)[:, -args.lite_topk_output_pixel:]
             sorted_top_indices = np.argsort(X[np.arange(X.shape[0])[:, None], partial_indices], axis=1)[:, ::-1]
@@ -155,7 +155,7 @@ def slda_decode(_args):
         logging.info(f"Output {pixel.shape[0]} pixels and {anchor.shape[0]} anchors")
         anchor.X = anchor.X.map('{:.2f}'.format)
         anchor.Y = anchor.Y.map('{:.2f}'.format)
-        if args.lite_topk_output_anchor > 0 and args.lite_topk_output_anchor < K:
+        if args.lite_topk_output_anchor > 0 and args.lite_topk_output_anchor <= K:
             X = anchor[factor_header].values
             partial_indices = np.argpartition(X, -args.lite_topk_output_anchor, axis=1)[:, -args.lite_topk_output_anchor:]
             sorted_top_indices = np.argsort(X[np.arange(X.shape[0])[:, None], partial_indices], axis=1)[:, ::-1]
